@@ -19,7 +19,7 @@ let imgTwo = document.getElementById('img-two');
 const ctx = document.getElementById('myChart').getContext('2d');
 
 // +++++ OTHER GLOBALS ++++++
-const goatArray = [];
+let goatArray = [];
 let maxVotes = 15;
 let counter = 0;
 
@@ -28,21 +28,36 @@ let counter = 0;
 function Goat(name, fileExtension = 'jpg') {
   this.name = name;
   this.src = `img/${name}.${fileExtension}`;
-  this.views = 0;
+  this.views = 0; //assign to array at i.views
   this.votes = 0;
   goatArray.push(this);
 }
 
-// ******* INSTANTIATE SOME GOATS *****
-new Goat('bunny-goat', 'png');
-new Goat('cool-goat');
-new Goat('cruisin-goat');
-new Goat('float-your-goat');
-new Goat('goat-out-of-hand');
-new Goat('kissing-goat');
-new Goat('sassy-goat');
-new Goat('smiling-goat');
-new Goat('sweater-goat');
+// step 3: Get the goats out of local storage
+
+let retreivedGoats = localStorage.getItem('goats');
+
+let parsedGoats = JSON.parse(retreivedGoats);
+
+//let parsedGoats = JSON.parse(localStorage.getItem('goats'))'
+
+//step 4: If I have goats in LS, use those, if not, instantiate new goats
+
+if(retreivedGoats){
+  goatArray = parsedGoats; // changed const goatArray to let goatArray
+} else {
+
+  // ******* INSTANTIATE SOME GOATS *****
+  new Goat('bunny-goat', 'png');
+  new Goat('cool-goat');
+  new Goat('cruisin-goat');
+  new Goat('float-your-goat');
+  new Goat('goat-out-of-hand');
+  new Goat('kissing-goat');
+  new Goat('sassy-goat');
+  new Goat('smiling-goat');
+  new Goat('sweater-goat');
+}
 
 console.log(goatArray);
 
@@ -156,7 +171,15 @@ function handleShowResults(event) { //eslint-disable-line
   if (maxVotes === 0) {
     renderChart();
   }
+  //*********Local Storage ***********/
 
+  //step 1: stringify our data
+
+  let stringifiedGoats = JSON.stringify(goatArray);
+  console.log(stringifiedGoats);
+
+  //step 2: set the item in local storage
+  localStorage.setItem('goats', stringifiedGoats);
 }
 
 //Step #1 - Event listener
